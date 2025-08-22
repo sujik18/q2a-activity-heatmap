@@ -10,4 +10,4 @@ Shows a GitHub-style activity heatmap for user actions (logins, exams, posts, et
 
 ### Third-Party Libraries
 
-This project uses [Cal-Heatmap](https://github.com/wanadev/cal-heatmap), licensed under the MIT License.
+This project uses [Cal-Heatmap](https://github.com/wa0x6e/cal-heatmap), licensed under the MIT License.
