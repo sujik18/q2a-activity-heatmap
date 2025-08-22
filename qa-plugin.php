@@ -9,7 +9,6 @@
     Plugin Author URI: https://gateoverflow.in/user/SUJITH%27
     Plugin License: GPLv2
     Plugin Minimum Question2Answer Version: 1.8
-    * This plugin uses Cal-Heatmap (https://cal-heatmap.com) by Wanadev, licensed under the MIT License.
 */
 
 if (!defined('QA_VERSION')) { header('Location: ../../'); exit; }
