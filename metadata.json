@@ -1,0 +1,11 @@
+{
+  "name": "Activity Heatmap",
+  "uri": "https://github.com/sujik18/q2a-activity-heatmap",
+  "description": "Displays a Cal-Heatmap visualization of user activity.",
+  "version": "1.0",
+  "date": "2025-08-15",
+  "author": "Sujith Kanakkassery",
+  "author_uri": "https://gateoverflow.in/user/SUJITH%27",
+  "license": "GPLv2",
+  "min_q2a": "1.8"
+}
