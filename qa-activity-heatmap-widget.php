@@ -26,120 +26,59 @@ class qa_activity_heatmap_widget {
                 }
             }
         } else {
-            // no exam data → safe default
+            // handling no exam case
             $data[] = [
-                'date' => time(),
+                'date' => time() * 1000,
                 'value' => 0
             ];
         }
 
-        // echo the JSON once for JS usage
-        $json = json_encode($data);
-        echo "
-        <script>
-            var examData = $json;
-            console.log('Exam Data:', examData);
-        </script>";
-
         return $data;
     }
-    
 
     function output_widget($region, $place, $themeobject, $template, $request, $qa_content) {
         $handle = qa_request_part(1); 
         $target_userid = qa_handle_to_userid($handle);
-        echo "<script>console.log('User ID: " . $target_userid . "');</script>";
+        
         if (!$target_userid) {
             $themeobject->output('<div class="qa-widget-content">No user found.</div>');
             return;
         }
-        // $json = get_exam_data($target_userid); 
+
         $exam_data = $this->get_exam_data($target_userid); 
         $json = json_encode($exam_data);
-        echo "<script>console.log('JSON Data: " . $json . "');</script>";
 
-        $themeobject->output('<link rel="stylesheet" href="https://unpkg.com/cal-heatmap/cal-heatmap.css" />');
-        $themeobject->output('<script src="https://unpkg.com/d3@7/dist/d3.min.js"></script>');
-        $themeobject->output('<script src="https://unpkg.com/dayjs/dayjs.min.js"></script>');
-        $themeobject->output('<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>');
-        $themeobject->output('<script src="https://unpkg.com/cal-heatmap/dist/cal-heatmap.min.js"></script>');
-        $themeobject->output('<script src="https://unpkg.com/cal-heatmap/dist/plugins/tooltip.min.js"></script>');
-        $themeobject->output('<script src="https://unpkg.com/cal-heatmap/dist/plugins/CalendarLabel.min.js"></script>');
-    
         $themeobject->output('<div style="margin: auto;">');
         $themeobject->output('<div id="activity-heatmap-tooltip" class="ch-plugin-tooltip"></div>');
         $themeobject->output('
-            <div id="activity-heatmap-tooltip" class="ch-plugin-tooltip"></div>
-                <div id="activity-heatmap" 
-                    style="
-                        padding: 10px; 
-                        box-sizing: border-box; 
-                        background-color: #f9f9f9; 
-                        min-height: 150px; 
-                        max-width: 1400px; 
-                        margin: 5px auto; 
-                        width: 100%;
-                    ">
-                </div>
+            <div id="activity-heatmap" 
+                style="
+                    padding: 10px; 
+                    box-sizing: border-box; 
+                    background-color: #f9f9f9; 
+                    min-height: 150px; 
+                    max-width: 1400px; 
+                    margin: 5px auto; 
+                    width: 100%;
+                ">
             </div>
+        </div>
         ');
 
         $themeobject->output("
-        <style>
-            #activity-heatmap-tooltip {
-                position: fixed !important;
-                z-index: 999999 !important;
-                background: black !important;
-                border: 1px solid #ccc;
-                padding: 6px 10px;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-                pointer-events: none;
-                font-size: 13px;
-                display: none;
-            }
-
-            #activity-heatmap {
-                overflow-x: auto;
-                white-space: nowrap;
-                padding: 10px;
-                // border: 1px solid #fcc;
-                border: 2px solid transparent;
-                margin: 1px 1px 1px 1px;
-            }
-            .highlight rect{
-                stroke: #000 !important;
-                stroke-width: 3px !important;
-            }
-            /* Override any conflicting styles from cal-heatmap */
-            .ch-plugin-tooltip {
-                position: fixed !important;
-                z-index: 999999 !important;
-            }
-            /* Ensure the heatmap container is positioned correctly */
-            div:has(#activity-heatmap) {
-                position: relative;
-                z-index: auto;
-            }    
-        </style>
         <script>
-        window.addEventListener('load', function() {
+        // Store the data globally so the layer can access it
+        window.examHeatmapData = $json;
+        
+        // Function to initialize heatmap (will be called by the layer)
+        window.initActivityHeatmap = function() {
+            if (typeof CalHeatmap === 'undefined') {
+                console.error('CalHeatmap not loaded');
+                return;
+            }
 
-            // // Sample data for testing
-            // const data = [];
-            // // Generate Sample data
-            // for (let month = 0; month < 1; month++) { 
-            //     const daysInMonth = new Date(2025, month + 1, 0).getDate();
-            //     for (let day = 1; day <= 3; day++) {
-            //         const ts = new Date(2025, month, day).getTime(); // ms
-            //         data.push({
-            //             date: Math.floor(ts),                 
-            //             value: Math.floor(Math.random() * 4)    // 0 to 3
-            //         });
-            //     }
-            // }
-
-            const data = $json;
-            console.log('Heatmap data:', data);
+            const data = window.examHeatmapData || [];
+            // console.log('Initializing heatmap with data:', data);
 
             const cal = new CalHeatmap();
             const now = new Date();
@@ -181,8 +120,7 @@ class qa_activity_heatmap_widget {
                         color: {
                             type: 'linear',
                             domain: [0,2],
-                            //scheme: 'Reds', //predifined RdBu color scheme
-                            // range: ['rgba(186, 186, 186, 1)', '#c73a3aff'], // Light to deep red
+                            // scheme: 'Reds',
                             range: ['#d6d6d6', '#5e2828ff'],
                         }
                     },
@@ -195,7 +133,6 @@ class qa_activity_heatmap_widget {
                             text: function(timestamp, value, dayjsDate) {
                                 const date = dayjs(timestamp);
                                 const formattedDate = date.format('( ddd ) MMM D, YYYY');
-                                // console.log('Tooltip - timestamp:', timestamp, 'formatted:', formattedDate, 'value:', value);
                                 if (value === 1) {
                                     return formattedDate + ' - ' + ' 1 exam taken';
                                 }
@@ -217,9 +154,9 @@ class qa_activity_heatmap_widget {
                         },
                     ],
                 ]
-            )
-        });
+            );
+        };
         </script>
-    ");
+        ");
     }
 }

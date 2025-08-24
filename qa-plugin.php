@@ -11,9 +11,17 @@
     Plugin Minimum Question2Answer Version: 1.8
 */
 
-if (!defined('QA_VERSION')) { header('Location: ../../'); exit; }
-qa_register_plugin_module('widget', 'qa-activity-heatmap-widget.php', 'qa_activity_heatmap_widget', 'Activity Heatmap');
-qa_register_plugin_phrases('qa-activity-heatmap-lang-default.php', 'activity_heatmap');
-// qa_register_plugin_module('module', 'qa-activity-heatmap-admin.php', 'qa_activity_heatmap_admin', 'Activity Heatmap Admin');
+if (!defined('QA_VERSION')) exit;
 
-qa_register_plugin_module('widget', 'qa-activity-heatmap-widget.php', 'qa_activity_heatmap_widget', 'Activity Heatmap Widget');
+qa_register_plugin_module(
+    'widget',
+    'qa-activity-heatmap-widget.php',
+    'qa_activity_heatmap_widget',
+    'Activity Heatmap Widget' 
+);
+
+qa_register_plugin_layer(
+    'qa-activity-heatmap-layer.php', 
+    'Activity Heatmap Layer'
+);
+

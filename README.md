@@ -6,8 +6,8 @@ Shows a GitHub-style activity heatmap for user actions (logins, exams, posts, et
 
 1. Copy to `qa-plugin/activity-heatmap`
 2. Enable in Admin → Plugins
-3. Configure in Admin → Plugins → Activity Heatmap Admin
+3. Configure the widget in Admin → Layout → Activity Heatmap Widget
 
-### Third-Party Libraries
+## Third-Party Libraries
 
 This project uses [Cal-Heatmap](https://github.com/wa0x6e/cal-heatmap), licensed under the MIT License.
