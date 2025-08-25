@@ -28,9 +28,17 @@ class qa_html_theme_layer extends qa_html_theme_base
             #activity-heatmap {
                 overflow-x: auto;
                 white-space: nowrap;
-                padding: 10px;
+                padding: 10px 5px 10px 5px;
                 border: 2px solid transparent;
-                margin: 1px 1px 1px 1px;
+                box-sizing: border-box; 
+                background-color: #f9f9f9 !important;
+                min-height: 150px; 
+                max-width: 1400px; 
+                margin: 5px auto; 
+                width: 100%;
+            }
+            .ch-container {
+                padding: 5px 10px 5px 10px; // top right bottom left
             }
             
             .highlight rect {
@@ -49,6 +57,15 @@ class qa_html_theme_layer extends qa_html_theme_base
                 position: relative;
                 z-index: auto;
             }
+            [data-theme="dark"] .ch-container,
+            .dark .ch-container {
+                background-color: #36393f;
+                color: #f9f9f9;
+            }
+            [data-theme="dark"] #activity-heatmap,
+            .dark #activity-heatmap {
+                background-color: #36393f !important;
+            }       
         </style>
         ');
     }
