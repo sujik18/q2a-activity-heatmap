@@ -48,22 +48,8 @@ class qa_activity_heatmap_widget {
         $exam_data = $this->get_exam_data($target_userid); 
         $json = json_encode($exam_data);
 
-        $themeobject->output('<div style="margin: auto;">');
         $themeobject->output('<div id="activity-heatmap-tooltip" class="ch-plugin-tooltip"></div>');
-        $themeobject->output('
-            <div id="activity-heatmap" 
-                style="
-                    padding: 10px; 
-                    box-sizing: border-box; 
-                    background-color: #f9f9f9; 
-                    min-height: 150px; 
-                    max-width: 1400px; 
-                    margin: 5px auto; 
-                    width: 100%;
-                ">
-            </div>
-        </div>
-        ');
+        $themeobject->output('<div id="activity-heatmap"></div>');
 
         $themeobject->output("
         <script>
