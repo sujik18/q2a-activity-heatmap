@@ -29,7 +29,7 @@ class qa_activity_heatmap_widget {
             // handling no exam case
             $data[] = [
                 'date' => time() * 1000,
-                'value' => 0
+                'value' => null
             ];
         }
 
@@ -49,26 +49,80 @@ class qa_activity_heatmap_widget {
         $json = json_encode($exam_data);
 
         $themeobject->output('<div id="activity-heatmap-tooltip" class="ch-plugin-tooltip"></div>');
-        $themeobject->output('<div id="activity-heatmap"></div>');
+        $themeobject->output('
+
+            <div style="position: relative; padding: 10px 75px 0px 5px; margin-bottom: 5px; text-align: right;">
+                <select id="year-filter">
+                    <option value="default">Default (Last 12 months)</option>
+                </select>
+            </div>
+            <div id="activity-heatmap"></div>
+        ');
 
         $themeobject->output("
         <script>
         // Store the data globally so the layer can access it
         window.examHeatmapData = $json;
+        window.calInstance = null;
         
-        // Function to initialize heatmap (will be called by the layer)
-        window.initActivityHeatmap = function() {
+        // Function to populate year dropdown
+        function populateYearDropdown() {
+            const select = document.getElementById('year-filter');
+            const currentYear = new Date().getFullYear();
+            
+            // Clear existing options except the first one (Default)
+            while (select.options.length > 1) {
+                select.remove(1);
+            }
+            
+            // Add last 5 years
+            for (let i = 0; i < 5; i++) {
+                const year = currentYear - i;
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                select.appendChild(option);
+            }
+        }
+        
+        // Function to get date range based on selection
+        function getDateRange(value) {
+            const now = new Date();
+            let startDate, endDate, range;
+            
+            if (value === 'default') {
+                // Last 12 months
+                startDate = new Date(now.getFullYear()-1, now.getMonth()+1, 2);
+                endDate = new Date();
+                range = 12;
+            } else {
+                // Specific year
+                const year = parseInt(value);
+                startDate = new Date(year, 1, 1); // Jan 1
+                endDate = new Date(year, 12, 31); // Dec 31
+                range = 12;
+            }
+            
+            return { startDate, endDate, range };
+        }
+        
+        // Function to initialize/update heatmap
+        window.initActivityHeatmap = function(filterValue = 'default') {
             if (typeof CalHeatmap === 'undefined') {
                 console.error('CalHeatmap not loaded');
                 return;
             }
 
             const data = window.examHeatmapData || [];
-            // console.log('Initializing heatmap with data:', data);
+            const { startDate, endDate, range } = getDateRange(filterValue);
+
+            // Destroy existing instance if it exists
+            if (window.calInstance) {
+                window.calInstance.destroy();
+            }
 
             const cal = new CalHeatmap();
-            const now = new Date();
-            const xMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 12, 1);
+            window.calInstance = cal;
 
             cal.paint(
                 {
@@ -79,10 +133,10 @@ class qa_activity_heatmap_widget {
                         x: 'date',
                         y: 'value'
                     },
-                    range: 15,
+                    range: range,
                     date: {
-                        start: xMonthsAgo,
-                        end: now,
+                        start: startDate,
+                        end: endDate,
                         step: 1,
                         unit: 'day',
                         highlight: [
@@ -98,16 +152,15 @@ class qa_activity_heatmap_widget {
                     },
                     subDomain: {
                         type: 'day',
-                        width: 16,
-                        height: 16,
-                        radius: 2
+                        width: 20,
+                        height: 20,
+                        radius: 4
                     },
                     scale: {
                         color: {
                             type: 'linear',
                             domain: [0,2],
-                            // scheme: 'Reds',
-                            range: ['#d6d6d6', '#5e2828ff'],
+                            range: ['#fddbc7', '#b2182b'],
                         }
                     },
                 },
@@ -142,6 +195,25 @@ class qa_activity_heatmap_widget {
                 ]
             );
         };
+        
+        // Populate dropdown on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                populateYearDropdown();
+            });
+        } else {
+            populateYearDropdown();
+        }
+        
+        // Add event listener for dropdown change
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearFilter = document.getElementById('year-filter');
+            if (yearFilter) {
+                yearFilter.addEventListener('change', function(e) {
+                    window.initActivityHeatmap(e.target.value);
+                });
+            }
+        });
         </script>
         ");
     }

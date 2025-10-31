@@ -17,7 +17,7 @@ class qa_html_theme_layer extends qa_html_theme_base
                 background: black !important;
                 color: white !important;
                 border: 1px solid #ccc;
-                padding: 6px 10px;
+                padding: 6px 10px 0px 10px;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.15);
                 pointer-events: none;
                 font-size: 13px;
@@ -28,17 +28,17 @@ class qa_html_theme_layer extends qa_html_theme_base
             #activity-heatmap {
                 overflow-x: auto;
                 white-space: nowrap;
-                padding: 10px 5px 10px 5px;
+                padding: 10px 5px 10px 10px;
                 border: 2px solid transparent;
                 box-sizing: border-box; 
-                background-color: #f9f9f9 !important;
+                background-color: #fff !important;
                 min-height: 150px; 
-                max-width: 1400px; 
+                max-width: 1550px; 
                 margin: 5px auto; 
                 width: 100%;
             }
             .ch-container {
-                padding: 5px 10px 5px 10px; // top right bottom left
+                padding: 5px 15px 5px 10px; // top right bottom left
             }
             
             .highlight rect {
@@ -51,6 +51,15 @@ class qa_html_theme_layer extends qa_html_theme_base
                 position: fixed !important;
                 z-index: 999999 !important;
             }
+            .year-filter {
+                padding: 5px 15px 5px 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                background: white;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
             
             /* Ensure the heatmap container is positioned correctly */
             div:has(#activity-heatmap) {
@@ -58,7 +67,7 @@ class qa_html_theme_layer extends qa_html_theme_base
                 z-index: auto;
             }
             [data-theme="dark"] .ch-container,
-            .dark .ch-container {
+            .dark .ch-container .year-filter{
                 background-color: #36393f;
                 color: #f9f9f9;
             }
