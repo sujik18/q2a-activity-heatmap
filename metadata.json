@@ -8,5 +8,6 @@
   "author_uri": "https://github.com/sujik18",
   "update_uri": "https://raw.githubusercontent.com/sujik18/q2a-activity-heatmap/main/qa-plugin.php",
   "license": "GPLv2",
-  "min_q2a": "1.8"
+  "min_q2a": "1.8",
+  "load_order": "after_db_init"
 }
