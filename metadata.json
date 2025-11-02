@@ -6,7 +6,7 @@
   "date": "2025-10-31",
   "author": "Sujith Kanakkassery",
   "author_uri": "https://github.com/sujik18",
-  "update_uri": "https://raw.githubusercontent.com/sujik18/q2a-activity-heatmap/main/qa-plugin.php",
+  "update_uri": "https://raw.githubusercontent.com/sujik18/q2a-activity-heatmap/main/metadata.json",
   "license": "GPLv2",
   "min_q2a": "1.8",
   "load_order": "after_db_init"
