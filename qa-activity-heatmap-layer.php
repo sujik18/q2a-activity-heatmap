@@ -31,7 +31,7 @@ class qa_html_theme_layer extends qa_html_theme_base
                 padding: 10px 5px 10px 10px;
                 border: 2px solid transparent;
                 box-sizing: border-box; 
-                background-color: #fff !important;
+                background-color: inherit !important;
                 min-height: 150px; 
                 max-width: 1550px; 
                 margin: 5px auto; 
@@ -66,14 +66,12 @@ class qa_html_theme_layer extends qa_html_theme_base
                 position: relative;
                 z-index: auto;
             }
-            [data-theme="dark"] .ch-container,
-            .dark .ch-container .year-filter{
-                background-color: #36393f;
+            [data-theme="dark"] .ch-container, .year-filter{
+                background-color: inherit !important;
                 color: #f9f9f9;
             }
-            [data-theme="dark"] #activity-heatmap,
-            .dark #activity-heatmap {
-                background-color: #36393f !important;
+            [data-theme="dark"] #activity-heatmap{
+                background-color: inherit !important;
             }       
         </style>
         ');
