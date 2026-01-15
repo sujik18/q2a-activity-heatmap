@@ -66,13 +66,18 @@ class qa_html_theme_layer extends qa_html_theme_base
                 position: relative;
                 z-index: auto;
             }
-            [data-theme="dark"] .ch-container, .year-filter{
+            [data-theme="dark"] .ch-container{
                 background-color: inherit !important;
                 color: #f9f9f9;
             }
-            [data-theme="dark"] #activity-heatmap{
+            [data-theme="dark"] #activity-heatmap, #year-filter {
                 background-color: inherit !important;
-            }       
+            }
+            [data-theme="dark"] #year-filter option{
+                background-color: #2e3138ff !important;
+                border-color: #2e3138ff;
+                color: #f9f9f9 !important;
+            }    
         </style>
         ');
     }
